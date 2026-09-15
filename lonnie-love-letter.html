@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Lonnie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Caveat:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONFIG-ADJACENT: most editable copy lives in the CONFIG object
+   near the top of the <script> at the bottom of this file.
+   Colors, fonts, and layout tokens live here.
+   ============================================================ */
+:root{
+  --cream: #F6EFE3;
+  --cream-2: #EFE6D4;
+  --espresso: #35241B;
+  --ink: #2B1D16;
+  --blush: #E3BEB8;
+  --blush-deep: #C98F8A;
+  --champagne: #E4CE9E;
+  --burgundy: #6E2439;
+  --burgundy-deep: #501A29;
+  --gold: #AC8536;
+  --paper: #FBF6EC;
+  --shadow: rgba(53,36,27,0.18);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Jost',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  position:relative;
+}
+h1,h2,h3,.serif{
+  font-family:'Cormorant Garamond', serif;
+  font-weight:500;
+  color:var(--espresso);
+  margin:0;
+}
+.hand{
+  font-family:'Caveat', cursive;
+  color:var(--burgundy-deep);
+}
+.section{
+  min-height:100vh;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:6rem 1.5rem;
+  position:relative;
+  text-align:center;
+}
+.wrap{max-width:640px; margin:0 auto;}
+.small-caps{
+  font-size:0.78rem;
+  letter-spacing:0.04em;
+  color:var(--gold);
+  font-family:'Jost',sans-serif;
+}
+button{
+  font-family:'Jost',sans-serif;
+  cursor:pointer;
+  border:none;
+  background:none;
+}
+.btn{
+  background:var(--burgundy);
+  color:var(--paper);
+  padding:0.85rem 2rem;
+  border-radius:999px;
+  font-size:0.95rem;
+  letter-spacing:0.02em;
+  transition:transform .35s ease, background .35s ease, box-shadow .35s ease;
+  box-shadow:0 8px 24px -8px var(--shadow);
+}
+.btn:hover{ transform:translateY(-2px); background:var(--burgundy-deep); }
+.btn:active{ transform:translateY(0px) scale(.98); }
+.btn.ghost{
+  background:transparent;
+  color:var(--burgundy);
+  border:1.4px solid var(--burgundy);
+  box-shadow:none;
+}
+.btn.ghost:hover{ background:var(--burgundy); color:var(--paper); }
+
+/* film grain */
+#grain{
+  position:fixed; inset:0; pointer-events:none; z-index:9999;
+  opacity:0.05; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* cursor glow */
+#glow{
+  position:fixed; width:280px; height:280px; border-radius:50%;
+  pointer-events:none; z-index:1;
+  background:radial-gradient(circle, rgba(172,133,54,0.10), transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:opacity .3s ease;
+}
+/* ambient floating hearts */
+#ambient-hearts{ position:fixed; inset:0; pointer-events:none; z-index:2; overflow:hidden; }
+.ambient-heart{
+  position:absolute; bottom:-40px; color:var(--blush-deep); opacity:0.35;
+  animation:floatUp linear forwards; font-size:1.2rem;
+}
+@keyframes floatUp{
+  to{ transform:translateY(-110vh) translateX(var(--drift,20px)) rotate(20deg); opacity:0; }
+}
+.progress-dot-wrap{
+  position:fixed; right:14px; top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; gap:8px; z-index:50;
+}
+.progress-dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--blush-deep); opacity:0.35;
+  transition:opacity .3s, transform .3s;
+}
+.progress-dot.active{ opacity:1; transform:scale(1.6); background:var(--burgundy); }
+@media (max-width:720px){ .progress-dot-wrap{display:none;} }
+
+/* ---------- Section 1: intro ---------- */
+#intro{
+  background:radial-gradient(ellipse at 50% 20%, var(--champagne) 0%, var(--cream) 60%);
+}
+.intro-line{
+  font-size:1.05rem; opacity:0; transition:opacity 1.2s ease;
+}
+.intro-line.show{opacity:1;}
+#intro-name{ font-size:clamp(3rem,10vw,5.5rem); margin:1.2rem 0; opacity:0; transform:translateY(14px); transition:all 1s ease;}
+#intro-name.show{opacity:1; transform:translateY(0);}
+#intro-come{ font-family:'Caveat',cursive; font-size:1.6rem; opacity:0; transition:opacity 1s ease;}
+#intro-come.show{opacity:1;}
+#intro-btn{ margin-top:2.5rem; opacity:0; transition:opacity 1s ease;}
+#intro-btn.show{opacity:1;}
+#post-open{ display:none; }
+#post-open.show{ display:flex; }
+.sparkle-burst{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+
+/* ---------- Section 2: love meter ---------- */
+#meter-wrap{ width:100%; max-width:420px; margin:2.5rem auto 1.2rem; }
+#meter-slider{
+  -webkit-appearance:none; appearance:none; width:100%; height:8px;
+  border-radius:999px; background:linear-gradient(90deg,var(--blush),var(--burgundy));
+  outline:none;
+}
+#meter-slider::-webkit-slider-thumb{
+  -webkit-appearance:none; width:26px; height:26px; border-radius:50%;
+  background:var(--paper); border:3px solid var(--burgundy); cursor:grab;
+  box-shadow:0 4px 10px var(--shadow);
+}
+#meter-slider::-moz-range-thumb{
+  width:26px; height:26px; border-radius:50%;
+  background:var(--paper); border:3px solid var(--burgundy); cursor:grab;
+}
+#meter-label{ min-height:2.4rem; font-size:1.3rem; margin-top:1.4rem; }
+#meter-final{ margin-top:2rem; display:none; }
+#meter-final.show{ display:block; animation:popIn .6s ease; }
+@keyframes popIn{ from{opacity:0; transform:scale(.85);} to{opacity:1; transform:scale(1);} }
+
+/* ---------- flip cards (reasons / attractive / little things) ---------- */
+.card-stage{ width:100%; max-width:420px; margin:2rem auto 0; }
+.flip-card{
+  width:100%; height:280px; perspective:1400px; margin:0 auto;
+}
+.flip-inner{
+  position:relative; width:100%; height:100%; text-align:center;
+  transition:transform .7s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d;
+}
+.flip-inner.flipped{ transform:rotateY(180deg); }
+.flip-face{
+  position:absolute; inset:0; backface-visibility:hidden;
+  border-radius:18px; display:flex; align-items:center; justify-content:center;
+  padding:2rem; background:var(--paper);
+  box-shadow:0 18px 40px -16px var(--shadow);
+  border:1px solid rgba(172,133,54,0.25);
+}
+.flip-face.back{ transform:rotateY(180deg); background:var(--champagne); }
+.card-nav{ display:flex; justify-content:center; gap:1.4rem; align-items:center; margin-top:1.8rem; }
+.card-counter{ font-size:0.85rem; color:var(--gold); letter-spacing:0.05em; }
+.nav-arrow{ font-size:1.4rem; color:var(--burgundy); padding:.3rem .6rem; }
+.nav-arrow:disabled{ opacity:.25; cursor:default; }
+.tap-hint{ margin-top:1rem; font-size:.8rem; color:var(--gold); font-style:italic; }
+
+/* ---------- floating grid cards (things to do) ---------- */
+.grid-cards{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr));
+  gap:1rem; width:100%; margin-top:2rem;
+}
+.mini-card{
+  background:var(--paper); border-radius:16px; padding:1.4rem 1rem;
+  box-shadow:0 10px 26px -14px var(--shadow); cursor:pointer;
+  transition:transform .3s ease, box-shadow .3s ease;
+  border:1px solid rgba(172,133,54,0.2);
+  min-height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.6rem;
+}
+.mini-card:hover{ transform:translateY(-4px); box-shadow:0 16px 30px -14px var(--shadow); }
+.mini-card .title{ font-family:'Cormorant Garamond',serif; font-size:1.15rem; color:var(--espresso); }
+.mini-card .reveal{ font-family:'Caveat',cursive; font-size:1.15rem; color:var(--burgundy-deep); display:none; }
+.mini-card.open .title{ display:none; }
+.mini-card.open .reveal{ display:block; }
+
+/* ---------- balloons (little things) ---------- */
+.balloon-stage{
+  position:relative; width:100%; height:62vh; min-height:420px; max-height:600px;
+  overflow:hidden; margin-top:2rem; border-radius:18px;
+}
+.balloon{
+  position:absolute; bottom:-160px; width:80px; height:98px;
+  border-radius:50% 50% 50% 50% / 58% 58% 42% 42%;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  padding:0.7rem; cursor:pointer; color:var(--paper); font-family:'Jost',sans-serif;
+  font-size:0.72rem; line-height:1.2; font-weight:400;
+  box-shadow: inset -8px -8px 16px rgba(0,0,0,0.10), 0 10px 22px -10px var(--shadow);
+  animation-name: balloonFloat; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+.balloon::after{
+  content:''; position:absolute; bottom:-30px; left:50%; width:1px; height:30px; background:rgba(53,36,27,0.35);
+}
+@keyframes balloonFloat{
+  0%{ transform:translateY(0) translateX(0) rotate(-3deg); }
+  50%{ transform:translateY(-31vh) translateX(var(--sway,14px)) rotate(3deg); }
+  100%{ transform:translateY(-62vh) translateX(0) rotate(-3deg); }
+}
+.balloon-msg{
+  position:absolute; bottom:100%; left:50%; width:150px;
+  transform:translateX(-50%) translateY(8px); background:var(--paper); color:var(--burgundy-deep);
+  font-family:'Caveat',cursive; font-size:1.05rem; line-height:1.25; padding:.6rem .8rem;
+  border-radius:12px; opacity:0; transition:opacity .4s ease, transform .4s ease;
+  box-shadow:0 10px 22px -10px var(--shadow); pointer-events:none; white-space:normal;
+}
+.balloon-msg.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
+@media (max-width:520px){
+  .balloon{ width:66px; height:82px; font-size:.64rem; padding:.5rem; }
+  .balloon-stage{ height:56vh; min-height:380px; }
+}
+
+/* ---------- polaroid wall ---------- */
+.polaroid-wall{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:1.4rem 1rem; margin-top:2.5rem;
+  max-width:900px;
+}
+.polaroid{
+  background:var(--paper); padding:12px 12px 34px; width:150px;
+  box-shadow:0 14px 28px -12px var(--shadow); cursor:pointer;
+  transition:transform .35s ease;
+}
+.polaroid:hover{ transform:scale(1.04) rotate(0deg) !important; z-index:5; }
+.polaroid .frame{
+  width:100%; height:150px; background:linear-gradient(135deg,var(--blush),var(--champagne));
+  display:flex; align-items:center; justify-content:center; font-size:.75rem; color:var(--espresso); opacity:.7;
+}
+.polaroid .frame img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.polaroid .cap{ font-family:'Caveat',cursive; font-size:1.05rem; margin-top:.6rem; color:var(--burgundy-deep); }
+.lightbox{
+  position:fixed; inset:0; background:rgba(43,29,22,0.82); z-index:200;
+  display:none; align-items:center; justify-content:center; padding:2rem;
+}
+.lightbox.show{ display:flex; }
+.lightbox-card{
+  background:var(--paper); border-radius:8px; padding:1.6rem; max-width:340px; text-align:center;
+}
+.lightbox-card .frame{ width:100%; height:220px; }
+.lightbox-card .frame img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.lightbox-close{ margin-top:1.2rem; font-size:.85rem; color:var(--burgundy); text-decoration:underline; }
+
+/* ---------- envelope ---------- */
+.envelope-visual{
+  transition:opacity .6s ease, transform .6s ease, max-height .6s ease, margin .6s ease;
+  max-height:400px;
+}
+.envelope-visual.fade-out{
+  opacity:0; transform:scale(.9) translateY(-8px); max-height:0; margin:0; overflow:hidden; pointer-events:none;
+}
+.envelope-scene{
+  perspective:1200px; width:min(300px, 82vw); height:190px; margin:2.5rem auto 0; position:relative;
+}
+.envelope-body{
+  position:absolute; inset:0; background:var(--champagne); border-radius:6px;
+  box-shadow:0 20px 40px -16px var(--shadow);
+}
+.envelope-flap{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  clip-path:polygon(0 0, 50% 55%, 100% 0);
+  background:var(--blush); transform-origin:top; transition:transform .8s cubic-bezier(.5,0,.2,1);
+  border-radius:6px 6px 0 0; z-index:2;
+}
+.envelope-flap.open{ transform:rotateX(180deg); }
+.seal{
+  position:absolute; top:44%; left:50%; transform:translate(-50%,-50%);
+  width:40px; height:40px; border-radius:50%; background:var(--burgundy); z-index:3;
+  color:var(--paper); display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+  box-shadow:0 4px 10px var(--shadow); transition:opacity .4s ease, transform .4s ease;
+}
+.seal.hide{ opacity:0; transform:translate(-50%,-50%) scale(0); }
+.envelope-label{ font-family:'Caveat',cursive; font-size:1.2rem; position:absolute; bottom:14px; width:100%; text-align:center; color:var(--espresso); }
+
+.letter-content{
+  background:var(--paper); border-radius:10px; padding:1.7rem 1.6rem; margin:0 auto; max-width:480px; width:100%;
+  box-shadow:0 18px 40px -16px var(--shadow); text-align:left;
+  font-family:'Caveat',cursive; font-size:1.1rem; line-height:1.5; color:var(--ink);
+  opacity:0; transform:translateY(24px); max-height:0; overflow:hidden;
+  transition:opacity .8s ease, transform .8s ease;
+}
+.letter-content.show{ opacity:1; transform:translateY(0); max-height:2400px; margin-top:1.8rem; }
+
+/* ---------- quiz ---------- */
+.quiz-card{
+  background:var(--paper); border-radius:18px; padding:2rem 1.6rem; width:100%; max-width:420px;
+  box-shadow:0 18px 40px -16px var(--shadow); margin-top:2rem;
+}
+.quiz-options{ display:flex; flex-direction:column; gap:.7rem; margin-top:1.4rem; }
+.quiz-opt{
+  background:var(--cream-2); border-radius:10px; padding:.75rem 1rem; text-align:left;
+  font-size:.95rem; transition:background .25s ease, transform .2s ease;
+}
+.quiz-opt:hover{ background:var(--champagne); }
+.quiz-opt.correct{ background:var(--blush-deep); color:var(--paper); }
+.quiz-opt.wrong{ background:#d8c9c6; }
+.quiz-feedback{ margin-top:1rem; font-family:'Caveat',cursive; font-size:1.25rem; min-height:1.6rem; }
+
+/* ---------- secret hearts ---------- */
+.secret-heart{
+  position:absolute; font-size:1.3rem; opacity:0.55; cursor:pointer;
+  animation:pulseHeart 2.6s ease-in-out infinite;
+}
+@keyframes pulseHeart{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.18);} }
+.secret-toast{
+  position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--burgundy); color:var(--paper); padding:.7rem 1.4rem; border-radius:999px;
+  font-family:'Caveat',cursive; font-size:1.2rem; opacity:0; transition:all .4s ease; z-index:300; pointer-events:none;
+}
+.secret-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ---------- typography reveal (pops in as you scroll) ---------- */
+.word-stage{ display:flex; flex-direction:column; align-items:center; gap:9vh; padding:6vh 0; }
+.word-pop{
+  font-size:clamp(2.1rem,7vw,3.6rem); opacity:0; transform:scale(.72) translateY(24px);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.34,1.56,.64,1);
+  display:inline-block; color:var(--burgundy-deep);
+}
+.word-pop.final{ color:var(--gold); }
+.word-pop.show{ opacity:1; transform:scale(1) translateY(0); }
+
+/* fade helper for scroll reveals */
+.reveal-up{ opacity:0; transform:translateY(24px); transition:opacity .9s ease, transform .9s ease; }
+.reveal-up.in{ opacity:1; transform:translateY(0); }
+
+/* final kiss overlay */
+#kiss-overlay{
+  position:fixed; inset:0; background:var(--burgundy-deep); z-index:500;
+  display:none; align-items:center; justify-content:center; flex-direction:column; color:var(--paper);
+  text-align:center;
+}
+#kiss-overlay.show{ display:flex; }
+#kiss-overlay h2{ color:var(--paper); font-size:2.4rem; }
+#kiss-overlay .hand{ color:var(--champagne); font-size:1.8rem; margin-top:1rem; }
+
+.divider{ width:44px; height:1px; background:var(--gold); margin:1.6rem auto; opacity:.6; }
+p{ line-height:1.7; }
+@media (max-width:520px){
+  .flip-card{ height:320px; }
+  .section{ padding:4.5rem 1.15rem; }
+  .polaroid{ width:132px; }
+}
+</style>
+</head>
+<body>
+
+<div id="grain"></div>
+<div id="glow"></div>
+<div id="ambient-hearts"></div>
+<div class="progress-dot-wrap" id="dots"></div>
+<div class="secret-toast" id="secretToast"></div>
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-card">
+    <div class="frame" id="lightboxFrame"></div>
+    <p class="hand" id="lightboxNote" style="font-size:1.3rem;"></p>
+    <div class="lightbox-close" onclick="closeLightbox()">close</div>
+  </div>
+</div>
+<div id="kiss-overlay" onclick="closeKissAndTop()">
+  <div style="font-size:3rem;">💋</div>
+  <h2>Mwah. Now come here.</h2>
+  <p class="hand">The end ♡ ...for now.</p>
+  <button class="btn ghost" style="margin-top:2rem; border-color:var(--champagne); color:var(--champagne);" onclick="event.stopPropagation(); closeKissAndTop()">back to the top ♡</button>
+</div>
+
+<!-- ============ 1. INTRO ============ -->
+<section class="section" id="intro">
+  <div id="pre-open">
+    <p class="intro-line hand" id="l1" style="font-size:1.4rem;">For my man…</p>
+    <h1 id="intro-name">Lonnie ♡</h1>
+    <p id="intro-come">Come here, handsome.</p>
+    <div id="intro-btn"><button class="btn" onclick="openIntro()">open this →</button></div>
+  </div>
+  <div id="post-open" style="flex-direction:column; align-items:center;">
+    <h2 style="font-size:2.2rem;">Hi, my love.</h2>
+    <p class="hand" style="font-size:1.6rem; margin-top:.6rem;">I made you something.</p>
+    <button class="btn" style="margin-top:2rem;" onclick="scrollToNext('meter')">keep going, baby ♡</button>
+  </div>
+</section>
+
+<!-- ============ 2. LOVE METER ============ -->
+<section class="section" id="meter">
+  <div class="wrap">
+    <p class="small-caps">a very scientific instrument</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">How much does Maxine love Lonnie?</h2>
+    <div id="meter-wrap">
+      <input type="range" id="meter-slider" min="0" max="100" value="0" oninput="updateMeter(this.value)">
+    </div>
+    <p id="meter-label" class="hand"></p>
+    <div id="meter-final">
+      <p class="hand" style="font-size:1.8rem;">Yeah… I really, really love you.</p>
+      <button class="btn" style="margin-top:1.6rem;" onclick="scrollToNext('reasons')">okay but why though →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 10 REASONS ============ -->
+<section class="section" id="reasons">
+  <div class="wrap">
+    <p class="small-caps">reason by reason</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">10 reasons I love my man ♡</h2>
+    <div class="card-stage">
+      <div class="flip-card" id="reasonCard" onclick="flipReason()">
+        <div class="flip-inner" id="reasonInner">
+          <div class="flip-face front">
+            <h3 id="reasonFront" style="font-size:1.5rem;"></h3>
+          </div>
+          <div class="flip-face back">
+            <p class="hand" id="reasonBack" style="font-size:1.25rem;"></p>
+          </div>
+        </div>
+      </div>
+      <p class="tap-hint">tap the card to reveal ♡</p>
+      <div class="card-nav">
+        <button class="nav-arrow" id="reasonPrev" onclick="reasonStep(-1)">‹</button>
+        <span class="card-counter" id="reasonCounter">01 / 10</span>
+        <button class="nav-arrow" id="reasonNext" onclick="reasonStep(1)">›</button>
+      </div>
+    </div>
+    <div id="reasonsEnd" style="display:none; margin-top:2rem;">
+      <p class="hand" style="font-size:1.4rem;">P.S. I could've easily made this 100 reasons.</p>
+      <button class="btn ghost" style="margin-top:1rem;" onclick="reasonsEndClick(this)">don't tempt me.</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. THINGS TO DO ============ -->
+<section class="section" id="todo">
+  <div class="wrap" style="max-width:760px;">
+    <p class="small-caps">a running list</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">Things I want to do with my man</h2>
+    <div class="grid-cards" id="todoGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 5. ATTRACTIVE THINGS ============ -->
+<section class="section" id="attractive" style="background:linear-gradient(180deg,var(--cream),var(--blush) 140%, var(--cream));">
+  <div class="wrap" style="max-width:760px;">
+    <p class="small-caps">since we're being honest…</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">You are VERY attractive to me.</h2>
+    <div class="grid-cards" id="attractiveGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 6. LITTLE THINGS ============ -->
+<section class="section" id="little">
+  <div class="wrap" style="max-width:760px;">
+    <p class="small-caps">our little things</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">Little things that make me love you even more</h2>
+    <p style="font-size:.85rem; opacity:.65; margin-top:.5rem;">pop one ♡</p>
+    <div class="balloon-stage" id="balloonStage"></div>
+  </div>
+</section>
+
+<!-- ============ 7. POLAROID WALL ============ -->
+<section class="section" id="wall">
+  <div class="wrap" style="max-width:900px;">
+    <p class="small-caps">the memory wall</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">Us, in Polaroids</h2>
+    <p style="font-size:.85rem; opacity:.65; margin-top:.5rem;">A collection of our favorite memories together.</p>
+    <div class="polaroid-wall" id="polaroidWall"></div>
+  </div>
+</section>
+
+<!-- ============ 8. MISS YOU ENVELOPE ============ -->
+<section class="section" id="missyou">
+  <div class="wrap">
+    <p class="small-caps">for my sweetheart</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">Open this when you miss me</h2>
+    <div class="envelope-visual" id="missEnvelopeVisual">
+      <div class="envelope-scene" id="missEnvelope">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap" id="missFlap"></div>
+        <div class="seal" id="missSeal" onclick="openMissEnvelope()">♡</div>
+        <p class="envelope-label">For my sweetheart.</p>
+      </div>
+    </div>
+    <div class="letter-content" id="missLetterContent">
+      <p>Hi baby.</p>
+      <p>If you're reading this because you miss me, congratulations. I miss you too.</p>
+      <p>Come here — I've got a hug with your name on it, and I'm saving it for you until you're actually in my arms.</p>
+      <p style="margin-top:.6rem;">Call me and ask to see me please 🥹</p>
+    </div>
+    <button class="btn ghost" style="margin-top:2.4rem;" onclick="scrollToNext('quiz')">okay keep going →</button>
+  </div>
+</section>
+
+<!-- ============ 10. QUIZ ============ -->
+<section class="section" id="quiz">
+  <div class="wrap">
+    <p class="small-caps">pop quiz, handsome</p>
+    <h2 style="font-size:1.9rem; margin-top:.5rem;">Okay handsome, let's see how well you know your girl.</h2>
+    <div class="quiz-card" id="quizCard"></div>
+    <div id="quizResult" style="display:none; margin-top:1.6rem;">
+      <p class="hand" style="font-size:1.5rem;">Congratulations. You still have your baby privileges.</p>
+      <p style="margin-top:.4rem;">Come collect your kiss.</p>
+      <button class="btn" style="margin-top:1.4rem;" onclick="scrollToNext('bottle')">keep going →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. BOTTLE ONE FEELING ============ -->
+<section class="section" id="bottle" style="background:linear-gradient(180deg,var(--cream),var(--espresso) 220%);">
+  <div class="wrap">
+    <p class="reveal-up hand" style="font-size:1.8rem;">If I could bottle one feeling…</p>
+    <p class="reveal-up serif" style="font-size:1.6rem; margin-top:1.4rem;">it would be the feeling of being close to you.</p>
+    <p class="reveal-up" style="margin-top:1.4rem; opacity:.85;">I don't know how to explain it perfectly. I just know that when I'm wrapped up in you, everything feels a little softer.</p>
+  </div>
+</section>
+
+<!-- ============ 14. YOU ARE MY ============ -->
+<section class="section" id="youare">
+  <div class="wrap">
+    <p class="small-caps">you are my</p>
+    <div class="word-stage" id="wordStage"></div>
+  </div>
+</section>
+
+<!-- ============ 15. LOVE LETTER ============ -->
+<section class="section" id="letter">
+  <div class="wrap">
+    <p class="small-caps">the main event</p>
+    <h2 style="font-size:2rem; margin-top:.5rem;">The letter</h2>
+    <div class="envelope-visual" id="mainEnvelopeVisual">
+      <div class="envelope-scene" id="mainEnvelope">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap" id="mainFlap"></div>
+        <div class="seal" id="mainSeal" onclick="openMainEnvelope()">♡</div>
+        <p class="envelope-label">To my love, Lonnie ♡</p>
+      </div>
+    </div>
+    <div class="letter-content" id="mainLetter"></div>
+    <div id="afterLetter" style="display:none; margin-top:2.4rem;">
+      <button class="btn" onclick="scrollToNext('finale')">okay… one more thing →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16. FINAL EXPERIENCE ============ -->
+<section class="section" id="finale">
+  <div class="wrap" id="finaleStage" style="min-height:220px; display:flex; align-items:center; justify-content:center;">
+  </div>
+</section>
+
+<!-- ============ 17. FINAL BUTTON ============ -->
+<section class="section" id="goodbye" style="background:var(--espresso);">
+  <div class="wrap" style="color:var(--paper);">
+    <p style="opacity:.85;">that's everything, for now</p>
+    <button class="btn" style="margin-top:1.6rem; background:var(--gold); color:var(--espresso);" onclick="kissScreen()">kiss your screen →</button>
+    <p class="hand" style="margin-top:2rem; font-size:1.3rem; color:var(--champagne);">Always your girl,<br>love, Maxine</p>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   CONFIG — edit everything here. Nothing below this object
+   needs to change for personalization.
+   ============================================================ */
+const CONFIG = {
+  name: "Lonnie",
+  signature: "Maxine",
+
+  reasons: [
+    ["Because you're YOU.", "There is genuinely something about you that my heart just decided it was going to love."],
+    ["Because I love being close to you.", "I love your hugs, your touch, your warmth, your presence. Being close to you just feels right."],
+    ["Because you are my favorite person to be soft with.", "I love being your baby. I love being affectionate with you. I love the little version of me that comes out around you."],
+    ["Because you make ordinary moments feel special.", "I could literally be doing nothing with you and still think, wow… I really love this man."],
+    ["Because I love your mind.", "I love listening to you talk, learning how you think, and getting to know all the little pieces that make you you."],
+    ["Because you make me feel things.", "Sometimes I look at you and genuinely think, yeah… I'm so gone for this man."],
+    ["Because I love your affection.", "Give me your attention, your hugs, your kisses, your cuddles… I will happily take all of it."],
+    ["Because you're handsome.", "And yes, I'm going to continue reminding you because somebody has to keep your ego appropriately inflated."],
+    ["Because you're my baby.", "That's it. That's the reason. You're my baby and I love you."],
+    ["Because I love you.", "Not because of one particular thing. Not because I can make a list long enough. I just do. I love you, my sweetheart."]
+  ],
+
+  thingsToDo: [
+    ["Cuddle you", "for an unreasonable amount of time. You know I could live in your skin if that was an option"],
+    ["Steal your clothes", "i liked the fact that your shirts are big on me. can't wait to wear them only around you ;)"],
+    ["Kiss you", "and then probably not stop."],
+    ["Go on cute dates", "ololua is still waiting for us. karaoke? arcade dates? also more getting planet yogurt with you"],
+    ["Travel with you", "imagine us somewhere beautiful with absolutely nowhere to be. just me and you probably listening to afrohouse"],
+    ["Take approximately 900 pictures of you", "yes, you're my man. I need photographic evidence."],
+    ["Fall asleep next to you", "my favorite kind of peaceful. you know how much i love being in your arms"],
+    ["Make memories with you", "the kind we'll randomly talk about years later and feel so loved"]
+  ],
+
+  attractiveThings: [
+    ["Your face", "Hello??? Have you looked at yourself? That's why I'm obsessed with smooching you all over."],
+    ["Your smile", "Actually unfair. Can't believe other people get to see it. #jealous"],
+    ["Your voice", "Could listen to you talk forever. It's so attractive, maybe too attractive."],
+    ["Your hugs", "Unfortunately I am addicted."],
+    ["Your eyes", "I easily get lost in them and I find it hard to look away."],
+    ["Your hands", "I find myself staring at your fingers sometimes. no further comment."],
+    ["Your whole existence", "Unfortunately for me, you're ridiculously attractive."]
+  ],
+
+  littleThings: [
+    ["your hugs", "the kind that make me forget what my worries were."],
+    ["your voice", "my favorite sound, easily."],
+    ["your laugh", "muhahaha, im funny admit it, right?."],
+    ["your smile", "the reason I keep finding excuses to make you smile more."],
+    ["cuddling", "the best thing ever, forever."],
+    ["our random conversations", "we can talk about nothing for an hour and I'll still enjoy it."],
+    ["sitting together doing absolutely nothing", "will never get old."],
+    ["your affection", "yes please, always."],
+    ["your attention", "give it to me and watch me light up."],
+    ["the way you look at me", "I notice. every single time."],
+    ["our little jokes", "nobody else would get it, and that's exactly the point."],
+    ["hearing from you", "raises my spirits, every single time."],
+    ["spending time with you", "never enough of it, honestly."],
+    ["getting to be your girl", "waiting for it to be officially mine."]
+  ],
+
+  polaroids: [
+  ["my favorite boy ♡", "This one's staying on my phone forever, just so you know.", "images/photo1.jpeg"],
+  ["look at my mannnn", "I zoom in on this way more than I should admit.", "images/photo2.jpeg"],
+  ["why are you so handsome?", "genuinely unfair to the rest of the population.", "images/photo3.jpeg"],
+  ["us.", "one of my favorite words now, actually.", "images/photo4.jpeg"],
+  ["one of my favorite people.", "top of the list, no contest.", "images/photo5.jpeg"],
+  ["my baby.", "obsessed, respectfully.", "images/photo6.jpeg"],
+  ["I love this one.", "you have no idea how much I look at this.", "images/photo7.jpeg"]
+],
+
+  quiz: [
+    {
+      q: "What is Maxine's favorite form of affection?",
+      options: ["Hugs that last too long", "A firm handshake", "Sending tiktoks/reels only"],
+      correct: 0
+    },
+    {
+      q: "What instantly makes Maxine smile?",
+      options: ["A random 'thinking of you' text", "Silence", "Being left on read"],
+      correct: 0
+    },
+    {
+      q: "What does Maxine secretly love hearing from you?",
+      options: ["'come here baby'", "'we need to talk'", "nothing, she doesn't need words"],
+      correct: 0
+    },
+    {
+      q: "What kind of date would make Maxine ridiculously happy?",
+      options: ["Dressing up to eat then going to listen to afrohouse", "A silent library date", "Hiking together"],
+      correct: 0
+    },
+    {
+      q: "What does Maxine want more of from her man?",
+      options: ["Hugs, attention, and affection", "Space, forever", "Less texting"],
+      correct: 0
+    },
+    {
+      q: "What nickname does Maxine secretly love being called?",
+      options: ["princess", "madam", "baby"],
+      correct: 0
+    }
+  ],
+
+  secretNotes: [
+    "I love you.", "You're my favorite.", "Hi baby ♡", "You're so handsome.",
+    "I miss you.", "Come kiss me.", "Your girl loves you.", "You're stuck with me.",
+    "My mannnn.", "Mwah."
+  ],
+
+  youAreMyWords: [
+    "my man", "my favorite face", "my sweetheart", "my favorite person", "my handsome man",
+    "my comfort", "mine", "my baby", "my favorite notification", "my love"
+  ],
+
+  loveLetter: `To my love, Lonnie,
+
+I don't really know how to start this without just saying it straight — I love you. A lot. More than I probably show you on a random Tuesday, so I'm putting it in writing.
+
+I love how handsome you are, and I don't mean that lightly — I mean the "I still get a little giddy looking at you" kind of handsome. I love being close to you. I love your hugs, your affection, the way being near you makes everything feel a little more settled.
+
+You've become such a special person to me. Somewhere between the inside jokes and the random conversations and the ordinary days that somehow felt like something, you just became my person. I love our little moments — the ones nobody else would even think twice about. I love laughing with you more than almost anything.
+
+I love being your girl. I love calling you my man. I love that I get to be soft and silly and completely myself around you, and you just love me back for it.
+
+I'm excited for everything we haven't done yet — the trips, the dumb little traditions we'll make up, the years of inside jokes we haven't even started yet. I'm grateful, genuinely, that our paths crossed.
+
+So here it is, plainly: you are deeply, thoroughly, embarrassingly loved by me.
+
+Always your girl,
+Maxine ♡`
+};
+
+/* ============================================================
+   STATE + HELPERS
+   ============================================================ */
+const sectionIds = ["intro","meter","reasons","todo","attractive","little","wall","missyou","quiz","bottle","youare","letter","finale","goodbye"];
+
+function scrollToNext(id){ document.getElementById(id).scrollIntoView({behavior:"smooth"}); }
+
+/* ---- ambient floating hearts ---- */
+function spawnAmbientHeart(){
+  const el = document.createElement('div');
+  el.className = 'ambient-heart';
+  el.textContent = '♡';
+  el.style.left = Math.random()*100 + 'vw';
+  el.style.setProperty('--drift', (Math.random()*60-30)+'px');
+  el.style.animationDuration = (9+Math.random()*8)+'s';
+  el.style.fontSize = (0.9+Math.random()*1.1)+'rem';
+  document.getElementById('ambient-hearts').appendChild(el);
+  setTimeout(()=>el.remove(), 18000);
+}
+setInterval(spawnAmbientHeart, 1400);
+
+/* ---- cursor glow ---- */
+document.addEventListener('mousemove', e=>{
+  const g = document.getElementById('glow');
+  g.style.left = e.clientX+'px'; g.style.top = e.clientY+'px';
+});
+
+/* ---- progress dots ---- */
+(function initDots(){
+  const wrap = document.getElementById('dots');
+  sectionIds.forEach(id=>{
+    const d = document.createElement('div');
+    d.className='progress-dot'; d.dataset.id=id;
+    d.onclick=()=>scrollToNext(id);
+    wrap.appendChild(d);
+  });
+})();
+const dotObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    const dot = document.querySelector(`.progress-dot[data-id="${e.target.id}"]`);
+    if(!dot) return;
+    if(e.isIntersecting) document.querySelectorAll('.progress-dot').forEach(d=>d.classList.remove('active'));
+    if(e.isIntersecting) dot.classList.add('active');
+  });
+}, {threshold:0.5});
+sectionIds.forEach(id=>{ const el=document.getElementById(id); if(el) dotObserver.observe(el); });
+
+/* ---- reveal-up on scroll ---- */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:0.4});
+document.querySelectorAll('.reveal-up').forEach((el,i)=>{
+  el.style.transitionDelay = (i*0.25)+'s';
+  revealObserver.observe(el);
+});
+
+/* ---- secret hearts scattered in a few sections ---- */
+function scatterSecretHearts(sectionId, count){
+  const section = document.getElementById(sectionId);
+  for(let i=0;i<count;i++){
+    const h = document.createElement('span');
+    h.className='secret-heart';
+    h.textContent='♡';
+    h.style.top = (10+Math.random()*80)+'%';
+    h.style.left = (Math.random()>0.5 ? (2+Math.random()*8) : (88+Math.random()*8))+'%';
+    h.style.animationDelay = (Math.random()*2)+'s';
+    h.onclick = (ev)=>{ ev.stopPropagation(); showSecretToast(); };
+    section.appendChild(h);
+  }
+}
+["todo","attractive","little","wall","bottle","youare"].forEach(id=>scatterSecretHearts(id, 2));
+let lastNote = -1;
+function showSecretToast(){
+  let idx;
+  do{ idx = Math.floor(Math.random()*CONFIG.secretNotes.length); } while(idx===lastNote && CONFIG.secretNotes.length>1);
+  lastNote = idx;
+  const t = document.getElementById('secretToast');
+  t.textContent = CONFIG.secretNotes[idx];
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1900);
+}
+
+/* ============================================================
+   1. INTRO
+   ============================================================ */
+function openIntro(){
+  document.getElementById('l1').classList.add('show');
+  setTimeout(()=>document.getElementById('intro-name').classList.add('show'), 500);
+  setTimeout(()=>document.getElementById('intro-come').classList.add('show'), 1300);
+  setTimeout(()=>document.getElementById('intro-btn').classList.add('show'), 2000);
+}
+document.getElementById('l1').classList.add('show');
+setTimeout(()=>document.getElementById('intro-name').classList.add('show'), 500);
+setTimeout(()=>document.getElementById('intro-come').classList.add('show'), 1300);
+setTimeout(()=>document.getElementById('intro-btn').classList.add('show'), 2000);
+
+document.querySelector('#intro-btn button').addEventListener('click', ()=>{
+  document.getElementById('pre-open').style.display='none';
+  const post = document.getElementById('post-open');
+  post.classList.add('show');
+  burstHearts();
+});
+function burstHearts(){
+  const layer = document.createElement('div');
+  layer.className='sparkle-burst';
+  document.body.appendChild(layer);
+  for(let i=0;i<24;i++){
+    const s = document.createElement('div');
+    s.textContent = Math.random()>0.5 ? '♡':'✦';
+    s.style.position='absolute';
+    s.style.left='50%'; s.style.top='40%';
+    s.style.color = Math.random()>0.5 ? '#C98F8A':'#AC8536';
+    s.style.fontSize=(0.8+Math.random()*1.4)+'rem';
+    const angle = Math.random()*Math.PI*2;
+    const dist = 120+Math.random()*260;
+    s.style.transition='all 1.2s cubic-bezier(.2,.7,.3,1)';
+    layer.appendChild(s);
+    requestAnimationFrame(()=>{
+      s.style.left = `calc(50% + ${Math.cos(angle)*dist}px)`;
+      s.style.top = `calc(40% + ${Math.sin(angle)*dist}px)`;
+      s.style.opacity='0';
+    });
+  }
+  setTimeout(()=>layer.remove(), 1400);
+}
+
+/* ============================================================
+   2. LOVE METER
+   ============================================================ */
+const meterLabels = [
+  [0,"okay… nothing yet."],
+  [10,"okay… a little."],
+  [20,"getting there…"],
+  [40,"okay wait…"],
+  [60,"oh she's gone."],
+  [80,"someone stop her."],
+  [99,"ERROR: SHE'S DOWN BAD."]
+];
+function updateMeter(val){
+  val = Number(val);
+  let label = meterLabels[0][1];
+  for(const [threshold,text] of meterLabels){ if(val>=threshold) label=text; }
+  document.getElementById('meter-label').textContent = label;
+  document.getElementById('meter-final').classList.toggle('show', val>=100);
+}
+
+/* ============================================================
+   3. 10 REASONS (flip cards)
+   ============================================================ */
+let reasonIdx = 0;
+let reasonFlipped = false;
+function renderReason(){
+  const [front, back] = CONFIG.reasons[reasonIdx];
+  document.getElementById('reasonFront').textContent = front;
+  document.getElementById('reasonBack').textContent = back;
+  document.getElementById('reasonInner').classList.remove('flipped');
+  reasonFlipped = false;
+  const n = reasonIdx+1;
+  document.getElementById('reasonCounter').textContent = String(n).padStart(2,'0')+' / '+CONFIG.reasons.length;
+  document.getElementById('reasonPrev').disabled = reasonIdx===0;
+  document.getElementById('reasonNext').disabled = false;
+  document.getElementById('reasonsEnd').style.display = 'none';
+}
+function flipReason(){
+  reasonFlipped = !reasonFlipped;
+  document.getElementById('reasonInner').classList.toggle('flipped', reasonFlipped);
+}
+function reasonStep(dir){
+  event.stopPropagation();
+  const next = reasonIdx+dir;
+  if(next<0) return;
+  if(next>=CONFIG.reasons.length){
+    document.getElementById('reasonsEnd').style.display='block';
+    return;
+  }
+  reasonIdx = next;
+  renderReason();
+}
+function reasonsEndClick(btn){
+  btn.textContent = "...fine, maybe a few more someday ♡";
+  btn.disabled = true;
+}
+renderReason();
+
+/* ============================================================
+   4/5/6. GRID CARDS
+   ============================================================ */
+function buildGrid(containerId, items, isPair){
+  const grid = document.getElementById(containerId);
+  items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'mini-card';
+    if(isPair){
+      const [title, reveal] = item;
+      card.innerHTML = `<div class="title">${title}</div><div class="reveal hand">${reveal}</div>`;
+    } else {
+      card.innerHTML = `<div class="title">${item}</div><div class="reveal hand">yes, this. always this.</div>`;
+    }
+    card.addEventListener('click', ()=> card.classList.toggle('open'));
+    grid.appendChild(card);
+  });
+}
+buildGrid('todoGrid', CONFIG.thingsToDo, true);
+buildGrid('attractiveGrid', CONFIG.attractiveThings, true);
+
+/* little things are balloons, not cards — see buildBalloons() below */
+function buildBalloons(){
+  const stage = document.getElementById('balloonStage');
+  const palette = ['var(--burgundy)','var(--blush-deep)','var(--gold)','var(--burgundy-deep)'];
+  const count = CONFIG.littleThings.length;
+  CONFIG.littleThings.forEach((item,i)=>{
+    const [label, msg] = item;
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    const leftPct = 6 + (i/count*76) + Math.random()*4;
+    b.style.left = leftPct+'%';
+    b.style.background = palette[i%palette.length];
+    b.style.animationDuration = (13+Math.random()*7)+'s';
+    b.style.animationDelay = (-(Math.random()*16))+'s';
+    b.style.setProperty('--sway', (Math.random()*36-18)+'px');
+    b.textContent = label;
+    b.addEventListener('click', ()=> popBalloon(b, msg));
+    stage.appendChild(b);
+  });
+}
+function popBalloon(b, msg){
+  if(b.querySelector('.balloon-msg')) return;
+  b.style.animationPlayState = 'paused';
+  const bubble = document.createElement('div');
+  bubble.className = 'balloon-msg';
+  bubble.textContent = msg;
+  b.appendChild(bubble);
+  requestAnimationFrame(()=> bubble.classList.add('show'));
+  setTimeout(()=>{
+    bubble.classList.remove('show');
+    setTimeout(()=>{
+      bubble.remove();
+      b.style.animationPlayState = 'running';
+    }, 400);
+  }, 2200);
+}
+buildBalloons();
+
+/* ============================================================
+   7. POLAROID WALL
+   ============================================================ */
+(function buildWall(){
+  const wall = document.getElementById('polaroidWall');
+  CONFIG.polaroids.forEach((p,i)=>{
+    const [cap, note, img] = p;
+    const rot = (Math.random()*10-5).toFixed(1);
+    const div = document.createElement('div');
+    div.className='polaroid';
+    div.style.transform = `rotate(${rot}deg)`;
+    div.innerHTML = `<div class="frame">${img ? `<img src="${img}" alt="${cap}">` : '[ your photo here ]'}</div><div class="cap">${cap}</div>`;
+    div.addEventListener('click', ()=> openLightbox(cap, note, img));
+    wall.appendChild(div);
+  });
+})();
+function openLightbox(cap, note, img){
+  document.getElementById('lightboxFrame').innerHTML = img ? `<img src="${img}" alt="${cap}">` : '[ your photo here ]';
+  document.getElementById('lightboxNote').innerHTML = `<strong style="font-family:'Cormorant Garamond',serif; display:block; font-size:1.4rem; color:var(--espresso);">${cap}</strong>${note}`;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox(){ document.getElementById('lightbox').classList.remove('show'); }
+
+/* ============================================================
+   8. MISS YOU ENVELOPE
+   ============================================================ */
+function openMissEnvelope(){
+  document.getElementById('missFlap').classList.add('open');
+  document.getElementById('missSeal').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('missEnvelopeVisual').classList.add('fade-out');
+    document.getElementById('missLetterContent').classList.add('show');
+  }, 650);
+}
+
+/* ============================================================
+   10. QUIZ
+   ============================================================ */
+let quizIdx = 0, quizScore = 0;
+function renderQuiz(){
+  const card = document.getElementById('quizCard');
+  if(quizIdx >= CONFIG.quiz.length){
+    card.style.display='none';
+    document.getElementById('quizResult').style.display='block';
+    return;
+  }
+  const item = CONFIG.quiz[quizIdx];
+  card.innerHTML = `
+    <p class="small-caps">question ${quizIdx+1} of ${CONFIG.quiz.length}</p>
+    <h3 style="font-size:1.3rem; margin-top:.5rem;">${item.q}</h3>
+    <div class="quiz-options" id="quizOptions"></div>
+    <p class="quiz-feedback hand" id="quizFeedback"></p>
+  `;
+  const optWrap = document.getElementById('quizOptions');
+  item.options.forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.className='quiz-opt';
+    b.textContent = opt;
+    b.onclick = ()=> answerQuiz(i, item.correct, b, optWrap);
+    optWrap.appendChild(b);
+  });
+}
+function answerQuiz(i, correct, btn, wrap){
+  [...wrap.children].forEach(c=>c.disabled=true);
+  if(i===correct){
+    btn.classList.add('correct');
+    document.getElementById('quizFeedback').textContent = "YESSS. You know your girl.";
+    quizScore++;
+  } else {
+    btn.classList.add('wrong');
+    wrap.children[correct].classList.add('correct');
+    document.getElementById('quizFeedback').textContent = "Hmmmm… we're going to have to work on that one, handsome.";
+  }
+  setTimeout(()=>{ quizIdx++; renderQuiz(); }, 1300);
+}
+renderQuiz();
+
+/* ============================================================
+   14. YOU ARE MY (typography reveal)
+   ============================================================ */
+(function buildWords(){
+  const stage = document.getElementById('wordStage');
+  const words = [...CONFIG.youAreMyWords, 'my person.'];
+  words.forEach((w,i)=>{
+    const s = document.createElement('span');
+    s.textContent = w;
+    s.className = 'serif word-pop' + (i===words.length-1 ? ' final' : '');
+    stage.appendChild(s);
+  });
+  const wordObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+  }, {threshold:0.55});
+  [...stage.children].forEach(el=>wordObserver.observe(el));
+})();
+
+/* ============================================================
+   15. MAIN LOVE LETTER
+   ============================================================ */
+document.getElementById('mainLetter').innerHTML = CONFIG.loveLetter.split('\n\n').map(p=>`<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+function openMainEnvelope(){
+  document.getElementById('mainFlap').classList.add('open');
+  document.getElementById('mainSeal').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('mainEnvelopeVisual').classList.add('fade-out');
+    document.getElementById('mainLetter').classList.add('show');
+  }, 650);
+  setTimeout(()=> document.getElementById('afterLetter').style.display='block', 1700);
+}
+
+/* ============================================================
+   16. FINAL EXPERIENCE
+   ============================================================ */
+const finaleLines = [
+  "Okay…", "One last thing.", "Actually…", "Two things.",
+  "You're very handsome.", "And I love you.", "A lot.",
+  "Like… embarrassingly a lot.", "My man. My baby. My sweetheart. My love."
+];
+let finaleStarted = false;
+const finaleObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && !finaleStarted){
+      finaleStarted = true;
+      playFinale();
+    }
+  });
+},{threshold:0.6});
+finaleObserver.observe(document.getElementById('finale'));
+function playFinale(){
+  const stage = document.getElementById('finaleStage');
+  let i=0;
+  function step(){
+    if(i>=finaleLines.length){
+      stage.innerHTML = `<h1 style="font-size:clamp(2.2rem,8vw,3.6rem); color:var(--burgundy-deep);">I LOVE YOU, ${CONFIG.name.toUpperCase()}. ♡</h1>`;
+      return;
+    }
+    stage.innerHTML = `<p class="serif" style="font-size:1.8rem; opacity:0; transition:opacity .6s;">${finaleLines[i]}</p>`;
+    requestAnimationFrame(()=>{ stage.firstChild.style.opacity='1'; });
+    i++;
+    setTimeout(step, 1400);
+  }
+  step();
+}
+
+/* ============================================================
+   17. FINAL KISS
+   ============================================================ */
+function closeKissAndTop(){
+  document.getElementById('kiss-overlay').classList.remove('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function kissScreen(){
+  document.getElementById('kiss-overlay').classList.add('show');
+  for(let i=0;i<18;i++){
+    setTimeout(()=>{
+      const h = document.createElement('div');
+      h.textContent='♡';
+      h.style.position='fixed';
+      h.style.left = Math.random()*100+'vw';
+      h.style.top = '100vh';
+      h.style.color = '#E4CE9E';
+      h.style.fontSize=(1+Math.random()*1.6)+'rem';
+      h.style.zIndex=600;
+      h.style.transition='transform 2.4s ease-out, opacity 2.4s ease-out';
+      document.body.appendChild(h);
+      requestAnimationFrame(()=>{
+        h.style.transform = `translateY(-100vh)`;
+        h.style.opacity='0';
+      });
+      setTimeout(()=>h.remove(), 2500);
+    }, i*80);
+  }
+}
+
+/* ============================================================
+   11. HIDDEN "DON'T CLICK THIS" EASTER EGGS
+   ============================================================ */
+(function addEasterEggs(){
+  const hosts = ['todo','attractive','wall'];
+  hosts.forEach(id=>{
+    const btn = document.createElement('button');
+    btn.className='btn ghost';
+    btn.style.marginTop='2rem';
+    btn.style.fontSize='.8rem';
+    btn.style.opacity='.6';
+    btn.textContent = "definitely don't click this.";
+    btn.onclick = ()=> triggerEasterEgg(btn);
+    document.getElementById(id).querySelector('.wrap').appendChild(btn);
+  });
+})();
+function triggerEasterEgg(btn){
+  const seq = ["I knew you would.", "Come here, handsome.", "Mwah ♡"];
+  let i=0;
+  btn.disabled = true;
+  function step(){
+    btn.textContent = seq[i];
+    i++;
+    if(i<seq.length) setTimeout(step, 1100);
+    else setTimeout(()=>{ btn.textContent="definitely don't click this."; btn.disabled=false; }, 1600);
+  }
+  step();
+}
+</script>
+</body>
+</html>
